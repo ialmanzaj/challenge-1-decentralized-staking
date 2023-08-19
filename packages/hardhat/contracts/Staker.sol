@@ -19,7 +19,8 @@ contract Staker is ReentrancyGuard {
 
   mapping(address => uint256) public balances;
   uint256 public constant threshold = 1 ether;
-  uint256 public deadline = block.timestamp + 30 seconds;
+  uint256 private future =  72 hours;
+  uint256 public deadline = block.timestamp + future;
   event Stake(address, uint256);
   bool internal openForWithdraw = false;
 
@@ -33,7 +34,7 @@ contract Staker is ReentrancyGuard {
   // (Make sure to add a `Stake(address,uint256)` event and emit it for the frontend `All Stakings` tab to display)
   function stake() public payable {
     balances[msg.sender] += msg.value;
-    deadline = block.timestamp + 30 seconds;
+    deadline = block.timestamp + future;
     payable(address(this)).call{value:msg.value}("");
     emit Stake(msg.sender, msg.value);
   }
@@ -46,8 +47,6 @@ contract Staker is ReentrancyGuard {
   // After some `deadline` allow anyone to call an `execute()` function
   // If the deadline has passed and the threshold is met, it should call `exampleExternalContract.complete{value: address(this).balance}()`
   function execute() public notExecuted {
-    console.log(block.timestamp >= deadline);
-    console.log(address(this).balance >= threshold);
     if (block.timestamp >= deadline && address(this).balance >= threshold) {
         exampleExternalContract.complete{value: address(this).balance}();
     }
