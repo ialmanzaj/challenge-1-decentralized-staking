@@ -81,9 +81,9 @@ describe("🚩 Challenge 1: 🥩 Decentralized Staking App", function () {
           console.log("\t", " 🎉 calling execute");
           const execResult = await stakerContract.execute();
           console.log("\t", " 🏷  execResult: ", execResult.hash);
-
+          
           const result = await exampleExternalContract.completed();
-          console.log("\t", " 🥁 complete: ", result);
+          console.log("\t", " 🥁 complete should be true: ", result);
           expect(result).to.equal(true);
         });
 
